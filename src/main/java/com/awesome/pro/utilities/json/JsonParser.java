@@ -37,11 +37,11 @@ public class JsonParser {
 	private Gson gson;
 
 	/**
-	 * Initialize JSON parser with adapters.
 	 * @param deserializers Adapters for deserialization.
 	 * @param serializersAdapters for serialization.
+	 * @return
 	 */
-	public static void initialize(
+	public static JsonParser getInstance(
 			final Map<Class<?>, JsonDeserializer<Class<?>>> deserializers,
 			final Map<Class<?>, JsonSerializer<Class<?>>> serializers) {
 		if (INSTANCE == null) {
@@ -53,13 +53,6 @@ public class JsonParser {
 					}
 				}
 			}
-		}
-		LOGGER.warn("JSON parser has been already initialized. Ignoring.");
-	}
-
-	public static JsonParser getInstance() {
-		if (INSTANCE == null) {
-			LOGGER.error("JSON parser has not been initialized yet.");
 		}
 		return INSTANCE;
 	}
@@ -73,18 +66,28 @@ public class JsonParser {
 			final Map<Class<?>, JsonSerializer<Class<?>>> serializers) {
 		GsonBuilder builder = new GsonBuilder();
 
-		final Iterator<Entry<Class<?>, JsonDeserializer<Class<?>>>> iter1 =
-				deserializers.entrySet().iterator();
-		while (iter1.hasNext()) {
-			Entry<Class<?>, JsonDeserializer<Class<?>>> deserializer = iter1.next();
-			builder.registerTypeAdapter(deserializer.getKey(), deserializer.getValue());
+		if (deserializers != null) {
+			final Iterator<Entry<Class<?>, JsonDeserializer<Class<?>>>> iter1 =
+					deserializers.entrySet().iterator();
+			while (iter1.hasNext()) {
+				Entry<Class<?>, JsonDeserializer<Class<?>>> deserializer =
+						iter1.next();
+				builder.registerTypeAdapter(
+						deserializer.getKey(),
+						deserializer.getValue());
+			}
 		}
 
-		final Iterator<Entry<Class<?>, JsonSerializer<Class<?>>>> iter2 =
-				serializers.entrySet().iterator();
-		while (iter2.hasNext()) {
-			Entry<Class<?>, JsonSerializer<Class<?>>> serializer = iter2.next();
-			builder.registerTypeAdapter(serializer.getKey(), serializer.getValue());
+		if (serializers != null) {
+			final Iterator<Entry<Class<?>, JsonSerializer<Class<?>>>> iter2 =
+					serializers.entrySet().iterator();
+			while (iter2.hasNext()) {
+				Entry<Class<?>, JsonSerializer<Class<?>>> serializer =
+						iter2.next();
+				builder.registerTypeAdapter(
+						serializer.getKey(),
+						serializer.getValue());
+			}
 		}
 
 		gson = builder.create();

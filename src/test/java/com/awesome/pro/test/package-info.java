@@ -2,4 +2,4 @@
  * Contains tests for dynamic compilation.
  * @author siddharth.s
  */
-package com.awesome.pro.compile.test;
+package com.awesome.pro.test;
