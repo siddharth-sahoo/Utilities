@@ -42,27 +42,31 @@ public class CompilerTools {
 		ClassPool pool = ClassPool.getDefault();
 		CtClass compileTimeClass = pool.makeClass(name);
 
-		final Iterator<String> fieldIterator = fields.iterator();
-		while (fieldIterator.hasNext()) {
-			final String field = fieldIterator.next();
-			try {
-				compileTimeClass.addField(CtField.make(
-						field, compileTimeClass));
-			} catch (CannotCompileException e) {
-				LOGGER.error("Compile error.", e);
-				System.exit(1);
+		if (fields != null) {
+			final Iterator<String> fieldIterator = fields.iterator();
+			while (fieldIterator.hasNext()) {
+				final String field = fieldIterator.next();
+				try {
+					compileTimeClass.addField(CtField.make(
+							field, compileTimeClass));
+				} catch (CannotCompileException e) {
+					LOGGER.error("Compile error.", e);
+					System.exit(1);
+				}
 			}
 		}
 
-		final Iterator<String> methodIterator = methods.iterator();
-		while (methodIterator.hasNext()) {
-			final String method = methodIterator.next();
-			try {
-				compileTimeClass.addMethod(CtNewMethod.make(
-						method, compileTimeClass));
-			} catch (CannotCompileException e) {
-				LOGGER.error("Compile error.", e);
-				System.exit(1);
+		if (methods != null) {
+			final Iterator<String> methodIterator = methods.iterator();
+			while (methodIterator.hasNext()) {
+				final String method = methodIterator.next();
+				try {
+					compileTimeClass.addMethod(CtNewMethod.make(
+							method, compileTimeClass));
+				} catch (CannotCompileException e) {
+					LOGGER.error("Compile error.", e);
+					System.exit(1);
+				}
 			}
 		}
 
