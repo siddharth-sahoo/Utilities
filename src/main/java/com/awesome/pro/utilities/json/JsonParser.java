@@ -33,43 +33,17 @@ public class JsonParser {
 	private static Logger LOGGER = Logger.getLogger(JsonParser.class);
 
 	/**
-	 * Singleton instance.
-	 */
-	private static JsonParser INSTANCE = null;
-
-	/**
 	 * GSON instance.
 	 */
 	private Gson gson;
-
-	/**
-	 * @param deserializers Adapters for deserialization.
-	 * @param serializersAdapters for serialization.
-	 * @return Instance of JSON parser.
-	 */
-	public static JsonParser getInstance(
-			final Map<Class<?>, JsonDeserializer<Class<?>>> deserializers,
-			final Map<Class<?>, JsonSerializer<Class<?>>> serializers) {
-		if (INSTANCE == null) {
-			synchronized (JsonParser.class) {
-				if (INSTANCE == null) {
-					INSTANCE = new JsonParser(deserializers, serializers);
-					if (LOGGER.isDebugEnabled()) {
-						LOGGER.debug("JSON parser initialized.");
-					}
-				}
-			}
-		}
-		return INSTANCE;
-	}
 
 	/**
 	 * Wrapper on GSON parser.
 	 * @param deserializers Adapters for deserialization.
 	 * @param serializers Adapters for serialization.
 	 */
-	private JsonParser(final Map<Class<?>, JsonDeserializer<Class<?>>> deserializers,
-			final Map<Class<?>, JsonSerializer<Class<?>>> serializers) {
+	public JsonParser(final Map<Class<?>, JsonDeserializer<?>> deserializers,
+			final Map<Class<?>, JsonSerializer<?>> serializers) {
 		GsonBuilder builder = new GsonBuilder().
 				registerTypeAdapter(IHTTPRequest.class,
 						Holder.REQUEST_ADAPTER).
@@ -81,11 +55,11 @@ public class JsonParser {
 						Holder.JSON_ELEMENT_ADAPTER);
 
 
-		if (deserializers != null) {
-			final Iterator<Entry<Class<?>, JsonDeserializer<Class<?>>>> iter1 =
+		if (deserializers != null && deserializers.size() > 0) {
+			final Iterator<Entry<Class<?>, JsonDeserializer<?>>> iter1 =
 					deserializers.entrySet().iterator();
 			while (iter1.hasNext()) {
-				Entry<Class<?>, JsonDeserializer<Class<?>>> deserializer =
+				Entry<Class<?>, JsonDeserializer<?>> deserializer =
 						iter1.next();
 				builder.registerTypeAdapter(
 						deserializer.getKey(),
@@ -93,11 +67,11 @@ public class JsonParser {
 			}
 		}
 
-		if (serializers != null) {
-			final Iterator<Entry<Class<?>, JsonSerializer<Class<?>>>> iter2 =
+		if (serializers != null && serializers.size() > 0) {
+			final Iterator<Entry<Class<?>, JsonSerializer<?>>> iter2 =
 					serializers.entrySet().iterator();
 			while (iter2.hasNext()) {
-				Entry<Class<?>, JsonSerializer<Class<?>>> serializer =
+				Entry<Class<?>, JsonSerializer<?>> serializer =
 						iter2.next();
 				builder.registerTypeAdapter(
 						serializer.getKey(),
@@ -178,18 +152,42 @@ public class JsonParser {
 		return json;
 	}
 
+	/**
+	 * Deserializes the JSON into an instance of the mentioned type.
+	 * @param json JSON Object
+	 * @param classOfT Type of the object sought.
+	 * @return Deserialized JSON object.
+	 */
 	public <T> T fromJson(JsonElement json, Class<T> classOfT) {
 		return this.gson.fromJson(json, classOfT);
 	}
 
+	/**
+	 * Deserializes the JSON into an instance of the mentioned type.
+	 * @param json JSON Object
+	 * @param typeOfT Type of the object sought.
+	 * @return Deserialized JSON object.
+	 */
 	public <T> T fromJson(JsonElement json, Type typeOfT) {
 		return this.gson.fromJson(json, typeOfT);
 	}
 
+	/**
+	 * Deserializes the JSON into an instance of the mentioned type.
+	 * @param json JSON Object
+	 * @param classOfT Type of the object sought.
+	 * @return Deserialized JSON object.
+	 */
 	public <T> T fromJson(String json, Class<T> classOfT) {
 		return this.gson.fromJson(json, classOfT);
 	}
 
+	/**
+	 * Deserializes the JSON into an instance of the mentioned type.
+	 * @param json JSON Object
+	 * @param typeOfT Type of the object sought.
+	 * @return Deserialized JSON object.
+	 */
 	public <T> T fromJson(String json, Type typeOfT) {
 		return this.gson.fromJson(json, typeOfT);
 	}
@@ -201,17 +199,17 @@ public class JsonParser {
 	 */
 	private final static class Holder {
 
-		private final static JsonDeserializer<IHTTPRequest> REQUEST_ADAPTER
-		= new HTTPRequestAdapter();
+		private final static JsonDeserializer<IHTTPRequest> REQUEST_ADAPTER =
+				new HTTPRequestAdapter();
 
-		private final static JsonDeserializer<IHTTPResponse> RESPONSE_ADAPTER
-		= new HTTPResponseAdapter();
+		private final static JsonDeserializer<IHTTPResponse> RESPONSE_ADAPTER =
+				new HTTPResponseAdapter();
 
-		private final static JsonDeserializer<IHTTPPerformance> PERFORMANCE_ADAPTER
-		= new HTTPPerformanceAdapter();
+		private final static JsonDeserializer<IHTTPPerformance> PERFORMANCE_ADAPTER =
+				new HTTPPerformanceAdapter();
 
-		private final static JsonDeserializer<JsonElement> JSON_ELEMENT_ADAPTER
-		= new JsonElementAdapter();
+		private final static JsonDeserializer<JsonElement> JSON_ELEMENT_ADAPTER =
+				new JsonElementAdapter();
 
 		/**
 		 * Adapter class for GSON deserialization that maps the IHTTPRequest
@@ -221,8 +219,10 @@ public class JsonParser {
 		private final static class HTTPRequestAdapter implements JsonDeserializer<IHTTPRequest> {
 
 			@Override
-			public IHTTPRequest deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-				return context.deserialize(element, HTTPFactory.getHTTPRequestImplClass());
+			public IHTTPRequest deserialize(JsonElement element, Type typeOfT,
+					JsonDeserializationContext context) throws JsonParseException {
+				return context.deserialize(element,
+						HTTPFactory.getHTTPRequestImplClass());
 			}
 
 		}
@@ -235,8 +235,10 @@ public class JsonParser {
 		private final static class HTTPResponseAdapter implements JsonDeserializer<IHTTPResponse> {
 
 			@Override
-			public IHTTPResponse deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-				return context.deserialize(element, HTTPFactory.getHTTPResponseImplClass());
+			public IHTTPResponse deserialize(JsonElement element, Type typeOfT,
+					JsonDeserializationContext context) throws JsonParseException {
+				return context.deserialize(element,
+						HTTPFactory.getHTTPResponseImplClass());
 			}
 
 		}
@@ -249,8 +251,10 @@ public class JsonParser {
 		private final static class HTTPPerformanceAdapter implements JsonDeserializer<IHTTPPerformance> {
 
 			@Override
-			public IHTTPPerformance deserialize(JsonElement element, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
-				return context.deserialize(element, HTTPFactory.getHTTPPerformanceImplClass());
+			public IHTTPPerformance deserialize(JsonElement element, Type typeOfT,
+					JsonDeserializationContext context) throws JsonParseException {
+				return context.deserialize(element,
+						HTTPFactory.getHTTPPerformanceImplClass());
 			}
 
 		}

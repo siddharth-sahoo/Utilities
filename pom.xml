@@ -3,10 +3,22 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.awesome.pro</groupId>
 	<artifactId>Utilities</artifactId>
-	<version>0.1</version>
+	<version>0.1.1</version>
 	<name>Utilities</name>
 	<description>Common utilities that can be used across projects</description>
 	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+			</resource>
+		</resources>
+		<testSourceDirectory>src/test/java</testSourceDirectory>
+		<testResources>
+			<testResource>
+				<directory>src/test/resources</directory>
+			</testResource>
+		</testResources>
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -120,6 +132,12 @@
 			<version>3.18.2-GA</version>
 		</dependency>
 
+		<!-- JUnit -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>4.12</version>
+		</dependency>
 
 	</dependencies>
 </project>

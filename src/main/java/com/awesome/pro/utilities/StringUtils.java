@@ -173,4 +173,20 @@ public final class StringUtils {
 		return line.substring(index + separator.length(), line.length());
 	}
 
+	/**
+	 * @param line
+	 * @param search
+	 * @param replace
+	 * @return
+	 */
+	public static String replace(String line, String search, String replace) {
+		int index = 0;
+		String result = "";
+		while ((index = line.indexOf(search)) != -1){
+			result = result + line.substring(0, index) + replace;
+			line = line.substring(index+search.length(), line.length());
+		}
+		return result+line;
+	}
+
 }
