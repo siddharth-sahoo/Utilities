@@ -39,8 +39,22 @@ public class CompilerTools {
 	/**
 	 * Javassist class loader.
 	 */
-	private static final JavassistClassLoader classLoader =
-			new JavassistClassLoader();
+	private static JavassistClassLoader CLASS_LOADER = null;
+
+	/**
+	 * Initializes Javassist class loader.
+	 * @throws NotFoundException When there is an error in class path
+	 * configuration.
+	 */
+	private static final void init() throws NotFoundException {
+		if (CLASS_LOADER == null) {
+			synchronized (CompilerTools.class) {
+				if (CLASS_LOADER == null) {
+					CLASS_LOADER = new JavassistClassLoader();
+				}
+			}
+		}
+	}
 
 	/**
 	 * This is a separator for specifying fully qualified enumeration class
@@ -55,9 +69,13 @@ public class CompilerTools {
 	 * @param className Fully qualified name of the class.
 	 * @param fields Set of source code for all the fields in the class.
 	 * @param methods Set of source code for all the methods in the class.
+	 * @throws Exception When there is a compiler error thrown for the
+	 * generated code or there is an issue in initializing the class loader.
 	 */
 	public static final void compile(final String className,
-			final Set<String> fields, final Set<String> methods) {
+			final Set<String> fields, final Set<String> methods) throws Exception {
+		init();
+
 		ClassPool pool = ClassPool.getDefault();
 		CtClass compileTimeClass = pool.makeClass(className);
 
@@ -69,8 +87,8 @@ public class CompilerTools {
 					compileTimeClass.addField(CtField.make(
 							field, compileTimeClass));
 				} catch (CannotCompileException e) {
-					LOGGER.error("Compile error.", e);
-					System.exit(1);
+					LOGGER.warn("Compile error.", e);
+					return;
 				}
 			}
 		}
@@ -84,7 +102,7 @@ public class CompilerTools {
 							method, compileTimeClass));
 				} catch (CannotCompileException e) {
 					LOGGER.error("Compile error.", e);
-					System.exit(1);
+					throw e;
 				}
 			}
 		}
@@ -93,13 +111,13 @@ public class CompilerTools {
 			compileTimeClass.writeFile();
 		} catch (CannotCompileException | NotFoundException e) {
 			LOGGER.error("Compiler error.", e);
-			System.exit(1);
+			throw e;
 		} catch (IOException e) {
 			LOGGER.error("Error writing to file.", e);
-			System.exit(1);
+			throw e;
 		}
 
-		classLoader.findClass(className);
+		CLASS_LOADER.findClass(className);
 	}
 
 	/**
@@ -114,10 +132,13 @@ public class CompilerTools {
 	 * annotation concatenated with the constant enum value separated by ~.
 	 * <br />For integer types, parameter is the integer itself.
 	 * <br />For string types, parameter is the string value itself.
+	 * @throws NotFoundException When there is an issue in initializing the
+	 * class loader.
 	 */
 	public static final void annotateField(final String className,
 			final String fieldName, final String annotationName,
-			final Map<String, Entry<String, AnnotationMemberType>> members) {
+			final Map<String, Entry<String, AnnotationMemberType>> members) throws NotFoundException {
+		init();
 		final ClassPool pool = ClassPool.getDefault();
 
 		// Retrieve reference to class.
@@ -221,8 +242,12 @@ public class CompilerTools {
 	 * @param <T> Class of the instance being sought.
 	 * @param className Fully qualified name of the class.
 	 * @return Instance of the class.
+	 * @throws NotFoundException When there is an issue in initializing the
+	 * class loader.
 	 */
-	public static final <T> T instantiate(final String className) {
+	public static final <T> T instantiate(final String className)
+			throws NotFoundException {
+		init();
 		CtClass cc1 = null;
 		try {
 			cc1 = ClassPool.getDefault().get(className);

@@ -1,5 +1,6 @@
 package com.awesome.pro.utilities;
 
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
@@ -15,45 +16,45 @@ import org.apache.log4j.Logger;
  * @author siddharth.s
  */
 public final class PropertyFileUtility {
-	
+
 	/**
 	 * Root logger instance.
 	 */
-	private final static Logger LOGGER = Logger.getLogger(PropertyFileUtility.class);
-	
+	private final static Logger LOGGER = Logger.getLogger(
+			PropertyFileUtility.class);
+
 	/**
 	 * Configuration object populated from the specified properties file.
 	 */
 	private Properties config;
-	
+
 	/**
 	 * Property file to be accessed.
 	 * Used for logging purposes.
 	 */
 	private String fileName;
-	
+
 	/**
 	 * Property file utility constructor.
 	 * @param fileName Property file to be read.
+	 * @throws IOException When the file is not found or there is an error
+	 * in opening or reading the file.
 	 */
-	public PropertyFileUtility(String fileName) {
-		try {
-			InputStream is = this.getClass().getClassLoader()
-					.getResourceAsStream(fileName);
-			if (is == null) {
-				LOGGER.error("File not found: " + fileName);
-				System.exit(1);
-			}
-			this.fileName = fileName;
-			this.config = new Properties();
+	public PropertyFileUtility(String fileName) throws IOException {
+		this.fileName = fileName;
+		this.config = new Properties();
+		InputStream is = this.getClass().getClassLoader()
+				.getResourceAsStream(this.fileName);
+		if (is == null) {
+			FileReader reader = new FileReader(this.fileName);
+			config.load(reader);
+		}
+		else {
 			this.config.load(is);
 			is.close();
-		} catch (IOException e) {
-			LOGGER.error("Error in reading file: " + this.fileName, e);
-			System.exit(1);
 		}
 	}
-	
+
 	/**
 	 * @return Map of all the properties.
 	 */
@@ -66,7 +67,7 @@ public final class PropertyFileUtility {
 		}
 		return allProperties;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @return If found, string value of the specified property is returned.
@@ -78,7 +79,7 @@ public final class PropertyFileUtility {
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return null;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @param defaultValue Default value of the property.
@@ -91,7 +92,7 @@ public final class PropertyFileUtility {
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return defaultValue;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @return If found, boolean value of the specified property is returned.
@@ -108,7 +109,7 @@ public final class PropertyFileUtility {
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return false;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @param defaultValue Default value of the property.
@@ -127,7 +128,7 @@ public final class PropertyFileUtility {
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return defaultValue;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @return If found, integer value of the specified property is returned.
@@ -142,13 +143,13 @@ public final class PropertyFileUtility {
 			} catch (NumberFormatException e) {
 				LOGGER.error("Error parsing as integer value: " + val 
 						+ "\nIn " + this.fileName + " for key: " + key, e);
-					return -1;
+				return -1;
 			}
 		}
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return -1;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @param defaultValue Default value of the property.
@@ -163,14 +164,14 @@ public final class PropertyFileUtility {
 				return Integer.parseInt(val);
 			} catch (NumberFormatException e) {
 				LOGGER.error("Error parsing as integer value: " + val 
-					+ "\nIn " + this.fileName + " for key: " + key, e);
+						+ "\nIn " + this.fileName + " for key: " + key, e);
 				return defaultValue;
 			}
 		}
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return defaultValue;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @return If found, integer value of the specified property is returned.
@@ -185,13 +186,13 @@ public final class PropertyFileUtility {
 			} catch (NumberFormatException e) {
 				LOGGER.error("Error parsing as double value: " + val 
 						+ "\nIn " + this.fileName + " for key: " + key, e);
-					return -1.0;
+				return -1.0;
 			}
 		}
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return -1.0;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @param defaultValue Default value of the property.
@@ -206,7 +207,7 @@ public final class PropertyFileUtility {
 				return Double.parseDouble(val);
 			} catch (NumberFormatException e) {
 				LOGGER.error("Error parsing as double value: " + val 
-					+ "\nIn " + this.fileName + " for key: " + key, e);
+						+ "\nIn " + this.fileName + " for key: " + key, e);
 				return defaultValue;
 			}
 		}
@@ -228,13 +229,13 @@ public final class PropertyFileUtility {
 			} catch (NumberFormatException e) {
 				LOGGER.error("Error parsing as double value: " + val 
 						+ "\nIn " + this.fileName + " for key: " + key, e);
-					return -1;
+				return -1;
 			}
 		}
 		LOGGER.warn("Specified key not found in " + this.fileName + ": " + key);
 		return -1;
 	}
-	
+
 	/**
 	 * @param key Property to be returned.
 	 * @param defaultValue Default value of the property.
@@ -249,7 +250,7 @@ public final class PropertyFileUtility {
 				return Long.parseLong(val);
 			} catch (NumberFormatException e) {
 				LOGGER.error("Error parsing as double value: " + val 
-					+ "\nIn " + this.fileName + " for key: " + key, e);
+						+ "\nIn " + this.fileName + " for key: " + key, e);
 				return defaultValue;
 			}
 		}

@@ -23,17 +23,6 @@ import com.google.gson.JsonObject;
  */
 public class CombinationGenerator {
 
-	public static void main(String[] args) {
-		Set<String> set = new HashSet<>();
-		set.add("qwe");
-		set.add("asd");
-		set.add("zxc");
-		List<List<String>> subsets = getSubsets(set);
-		for (int i = 0; i < subsets.size(); i ++) {
-			System.out.println(subsets.get(i));
-		}
-	}
-
 	/**
 	 * @param parameters Map of request keys and set of possible values.
 	 * @return Set of all request JSONs encompassing all possible

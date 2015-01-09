@@ -4,6 +4,8 @@ import java.lang.reflect.Field;
 import java.util.HashSet;
 import java.util.Set;
 
+import javassist.NotFoundException;
+
 import org.testng.annotations.Test;
 
 import com.awesome.pro.utilities.Assert;
@@ -13,7 +15,7 @@ import com.awesome.pro.utilities.CompilerTools;
 public class CompilerToolsTest {
 
 	@Test
-	public void testCompilation() {
+	public void testCompilation() throws Exception {
 		Set<String> fields = new HashSet<>();
 		Set<String> methods = new HashSet<>();
 
@@ -33,7 +35,7 @@ public class CompilerToolsTest {
 	}
 
 	@Test (dependsOnMethods = {"testCompilation"})
-	public void testInstantiation() {
+	public void testInstantiation() throws NotFoundException {
 		Object object = CompilerTools.instantiate("com.example.DynamicClass");
 		Field[] fields = object.getClass().getDeclaredFields();
 		Assert.assertEquals(fields.length, 2);

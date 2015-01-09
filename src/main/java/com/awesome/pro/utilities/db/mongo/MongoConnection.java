@@ -1,5 +1,6 @@
 package com.awesome.pro.utilities.db.mongo;
 
+import java.io.IOException;
 import java.net.UnknownHostException;
 
 import org.apache.log4j.Logger;
@@ -32,9 +33,12 @@ public final class MongoConnection {
 
 	/**
 	 * Initializes MongoDB client.
-	 * @param configFile Name of the configration file to be referred to.
+	 * @param configFile Name of the configuration file to be referred to.
+	 * @throws IOException When there is an error in reading the configuration
+	 * file or there is a problem in connecting to the specified MongoDB host.
 	 */
-	public static synchronized final void initialize(final String configFile) {
+	public static synchronized final void initialize(final String configFile)
+			throws IOException {
 		try {
 			final PropertyFileUtility config = new PropertyFileUtility(
 					configFile);
@@ -42,7 +46,7 @@ public final class MongoConnection {
 					PARAMETER_MONGO_URI, DEFAULT_MONGO_URI)));
 		} catch (UnknownHostException e) {
 			LOGGER.error("ERROR: Unable to connect to Mongo DB.", e);
-			System.exit(1);
+			throw e;
 		}
 		LOGGER.info("Initialized Mongo client.");
 	}

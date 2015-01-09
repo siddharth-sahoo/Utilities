@@ -27,30 +27,24 @@ public class JavassistClassLoader extends ClassLoader {
 	private ClassPool pool;
 
 	// Constructor.
-	public JavassistClassLoader() {
+	public JavassistClassLoader() throws NotFoundException {
 		pool = ClassPool.getDefault();
 		try {
 			pool.insertClassPath("./class");
 		} catch (NotFoundException e) {
 			LOGGER.error("Class path could not be located.", e);
-			System.exit(1);
+			throw e;
 		}
-		// MyApp.class must be there.
 	}
 
-	/* Finds a specified class.
-	 * The bytecode for that class can be modified.
-	 */
-
+	@Override
 	protected Class<?> findClass(String name) {
 		try {
 			CtClass cc = pool.get(name);
-			// modify the CtClass object here
 			byte[] b = cc.toBytecode();
 			return defineClass(name, b, 0, b.length);
 		} catch (NotFoundException | IOException | CannotCompileException e) {
 			LOGGER.error("Error in finding the class: " + name, e);
-			System.exit(1);
 		}
 		return null;
 	}

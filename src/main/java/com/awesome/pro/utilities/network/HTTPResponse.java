@@ -70,8 +70,9 @@ public class HTTPResponse implements IHTTPResponse, IHTTPPerformance {
 	 * @param connection HTTP connection object which can be
 	 * obtained while constructing a network call using the
 	 * Java URL API.
+	 * @throws IOException 
 	 */
-	public HTTPResponse(HttpURLConnection connection) {
+	public HTTPResponse(HttpURLConnection connection) throws IOException {
 		//FIXME: Capture POST parameters.
 		this.request = HTTPFactory.getHTTPRequest(connection.getURL().toString(),
 				connection.getRequestMethod(), null, null);
@@ -80,7 +81,7 @@ public class HTTPResponse implements IHTTPResponse, IHTTPPerformance {
 			this.status = connection.getResponseCode();
 		} catch (IOException e) {
 			LOGGER.error("Error obtaining response code.", e);
-			throw new Error("Error obtaining response code.", e);
+			throw e;
 		}
 		populateHeaders(connection.getHeaderFields());
 
@@ -89,8 +90,7 @@ public class HTTPResponse implements IHTTPResponse, IHTTPPerformance {
 			is = connection.getInputStream();
 		} catch (IOException e) {
 			LOGGER.error("Unable to read response.", e);
-			System.out.println("ERROR: Unable to read response.");
-			System.exit(1);
+			throw e;
 		}
 		this.rawResponse = convertStream(is, 1024);
 	}

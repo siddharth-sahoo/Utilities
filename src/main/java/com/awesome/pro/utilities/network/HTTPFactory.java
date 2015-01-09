@@ -1,5 +1,6 @@
 package com.awesome.pro.utilities.network;
 
+import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.util.Map;
 
@@ -42,8 +43,10 @@ public class HTTPFactory {
 	 * obtained while constructing a network call using the
 	 * Java URL API.
 	 * @return IHTTPResponse implementation.
+	 * @throws IOException When there is an error in reading the response.
 	 */
-	public static IHTTPResponse getHTTPResponse(HttpURLConnection connection) {
+	public static IHTTPResponse getHTTPResponse(HttpURLConnection connection)
+			throws IOException {
 		return new HTTPResponse(connection);
 	}
 

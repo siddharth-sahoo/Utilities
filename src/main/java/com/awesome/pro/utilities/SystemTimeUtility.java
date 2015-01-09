@@ -32,8 +32,7 @@ public class SystemTimeUtility {
 	 */
 	public static void positiveOffset(int hours, int minutes) {
 		if(!isAdmin()) {
-			System.out.println("Elevated privileges are required to change system time. Run as administrator.");
-			LOGGER.error("Elevated privileges are required to change system time. Run as administrator.");
+			LOGGER.warn("Elevated privileges are required to change system time. Run as administrator.");
 			return;
 		}
 		
@@ -56,8 +55,7 @@ public class SystemTimeUtility {
 	 */
 	public static void negativeOffset(int hours, int minutes) {
 		if(!isAdmin()) {
-			System.out.println("Elevated privileges are required to change system time. Run as administrator.");
-			LOGGER.error("Elevated privileges are required to change system time. Run as administrator.");
+			LOGGER.warn("Elevated privileges are required to change system time. Run as administrator.");
 			return;
 		}
 		

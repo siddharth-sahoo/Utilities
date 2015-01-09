@@ -178,7 +178,9 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 
 	@Override
 	public void setAllCells(String[][] inputArray){
-		System.out.println(inputArray.length);
+		if (LOGGER.isDebugEnabled()) {
+			LOGGER.debug(inputArray.length);
+		}
 		throw new Error("Not Implemented");
 	}
 

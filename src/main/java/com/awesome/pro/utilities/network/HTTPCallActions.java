@@ -7,6 +7,7 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.ProtocolException;
 import java.net.URL;
+import java.security.GeneralSecurityException;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -26,10 +27,17 @@ import org.apache.log4j.Logger;
  * The calls also handle certificate errors.
  * @author siddharth.s
  */
+/**
+ * @author siddharth.s
+ *
+ */
 public class HTTPCallActions implements IHTTPCallActions {
-	
+
+	/**
+	 * Root logger instance.
+	 */
 	private static Logger LOGGER = Logger.getLogger(HTTPCallActions.class);
-	
+
 	/**
 	 * Holder class to enforce singleton pattern in a thread safe manner.
 	 * @author siddharth.s
@@ -37,123 +45,116 @@ public class HTTPCallActions implements IHTTPCallActions {
 	private final static class Holder {
 		private static final IHTTPCallActions INSTANCE = new HTTPCallActions();
 	}
-	
+
+	/**
+	 * @return Singleton instance of HTTP actions.
+	 */
 	public static IHTTPCallActions getInstance() {
 		return Holder.INSTANCE;
 	}
 
-	/**
-	 * @param url URL on which the GET request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @param cookieValue Cookie data in a string format. This format is
-	 * similar to that of request parameters.
-	 * @return HTTP response object.
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makeGetCall(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makeGetCall(String url, String parameters, String cookieValue) {
+	public IHTTPResponse makeGetCall(String url, String parameters,
+			String cookieValue) throws IOException, GeneralSecurityException {
 		return Core.makeGetCall(url, parameters, cookieValue);
 	}
-	
-	/**
-	 * @param url URL on which the GET request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makeGetCall(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makeGetCall(String url, String parameters) {
+	public IHTTPResponse makeGetCall(String url, String parameters)
+			throws IOException, GeneralSecurityException {
 		return Core.makeGetCall(url, parameters, null);
 	}
-	
-	/**
-	 * @param url URL on which the GET request will be made, without the parameters.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makeGetCall(java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makeGetCall(String url) {
+	public IHTTPResponse makeGetCall(String url) throws IOException,
+	GeneralSecurityException {
 		return Core.makeGetCall(url, null, null);
 	}
-	
-	/**
-	 * @param url URL on which the POST request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @param cookieValue Cookie data in a string format. This format is
-	 * similar to that of request parameters.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makePostCall(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makePostCall(String url, String parameters, String cookieValue) {
+	public IHTTPResponse makePostCall(String url, String parameters,
+			String cookieValue) throws IOException, GeneralSecurityException {
 		return Core.makePostCall(url, parameters, cookieValue);
 	}
-	
-	/**
-	 * @param url URL on which the POST request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makePostCall(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makePostCall(String url, String parameters) {
+	public IHTTPResponse makePostCall(String url, String parameters)
+			throws IOException, GeneralSecurityException {
 		return Core.makePostCall(url, parameters, null);
 	}
-	
-	/**
-	 * @param url URL on which the PUT request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @param cookieValue Cookie data in a string format. This format is
-	 * similar to that of request parameters.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makePutCall(java.lang.String, java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makePutCall(String url, String parameters, String cookieValue) {
+	public IHTTPResponse makePutCall(String url, String parameters,
+			String cookieValue) throws IOException, GeneralSecurityException {
 		return Core.makePutCall(url, parameters, cookieValue);
 	}
-	
-	/**
-	 * @param url URL on which the PUT request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makePutCall(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makePutCall(String url, String parameters) {
+	public IHTTPResponse makePutCall(String url, String parameters)
+			throws IOException, GeneralSecurityException {
 		return Core.makePutCall(url, parameters, null);
 	}
-	
-	/**
-	 * @param url URL on which the DELETE request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @param cookieValue Cookie data in a string format. This format is
-	 * similar to that of request parameters.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makeDeleteCall(java.lang.String, java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makeDeleteCall(String url, String cookieValue) {
+	public IHTTPResponse makeDeleteCall(String url, String cookieValue)
+			throws IOException, GeneralSecurityException {
 		return Core.makeDeleteCall(url, cookieValue);
 	}
-	
-	/**
-	 * @param url URL on which the DELETE request will be made, without the parameters.
-	 * @param parameters String parameters to be passed on in the request.
-	 * @return HTTP response object.
+
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.network.IHTTPCallActions#makeDeleteCall(java.lang.String)
 	 */
 	@Override
-	public IHTTPResponse makeDeleteCall(String url) {
+	public IHTTPResponse makeDeleteCall(String url) throws IOException,
+	GeneralSecurityException {
 		return Core.makeDeleteCall(url, null);
 	}
-	
+
 	private static class Core {
-		
+
 		/**
 		 * @param getUrl URL on which the GET request will be made, without the parameters.
 		 * @param parameters String parameters to be passed on in the request.
 		 * @param cookieValue Cookie data in a string format. This format is
 		 * similar to that of request parameters.
 		 * @return HTTP response object.
+		 * @throws IOException When the URL is malformed or the host cannot be
+		 * resolved or connected to.
+		 * @throws GeneralSecurityException When there is an error in ignoring
+		 * certificate errors.
 		 */
-		private static IHTTPResponse makeGetCall(String getUrl, String parameters, String cookieValue) {
+		private static IHTTPResponse makeGetCall(String getUrl,
+				String parameters, String cookieValue)
+						throws IOException, GeneralSecurityException {
 			handleCertificateErrors();
-			
+
 			if(parameters != null)
 				getUrl = getUrl + "?" + parameters;
-			
+
 			LOGGER.info("GET call: " + getUrl);
 
 			URL url = null;
@@ -161,8 +162,7 @@ public class HTTPCallActions implements IHTTPCallActions {
 				url = new URL(getUrl);
 			} catch (MalformedURLException e) {
 				LOGGER.error("Improper URL", e);
-				System.out.println("ERROR: Improper URL: " + getUrl);
-				System.exit(1);
+				throw e;
 			}
 
 			HttpURLConnection connection = null;
@@ -170,10 +170,9 @@ public class HTTPCallActions implements IHTTPCallActions {
 				connection = (HttpURLConnection) url.openConnection();
 			} catch (IOException e) {
 				LOGGER.error("Unable to connect to host.", e);
-				System.out.println("ERROR: Unable to connect to host.");
-				System.exit(1);
+				throw e;
 			}
-			
+
 			if(cookieValue != null) {
 				if(cookieValue.length() != 0)
 					connection.setRequestProperty("Cookie", cookieValue);
@@ -181,17 +180,23 @@ public class HTTPCallActions implements IHTTPCallActions {
 
 			return HTTPFactory.getHTTPResponse(connection);
 		}
-		
+
 		/**
 		 * @param postUrl URL to which the POST call will be made.
 		 * @param parameters String parameters to be passed on in the request.
 		 * @param cookieValue Cookie data in a string format. This format is
 		 * similar to that of request parameters.
 		 * @return HTTP response object.
+		 * @throws IOException When the URL is malformed or the host cannot be
+		 * resolved or connected to.
+		 * @throws GeneralSecurityException  When there is an error in ignoring
+		 * certificate errors.
 		 */
-		private static IHTTPResponse makePostCall(String postUrl, String parameters, String cookieValue) {
+		private static IHTTPResponse makePostCall(String postUrl,
+				String parameters, String cookieValue)
+						throws IOException, GeneralSecurityException {
 			handleCertificateErrors();
-			
+
 			LOGGER.info("POST call: " + postUrl + "\nParams: " + parameters);
 
 			URL url = null;
@@ -199,8 +204,7 @@ public class HTTPCallActions implements IHTTPCallActions {
 				url = new URL(postUrl);
 			} catch (MalformedURLException e) {
 				LOGGER.error("Improper URL", e);
-				System.out.println("ERROR: Improper URL: " + postUrl);
-				System.exit(1);
+				throw e;
 			}
 
 			HttpURLConnection connection = null;
@@ -208,15 +212,14 @@ public class HTTPCallActions implements IHTTPCallActions {
 				connection = (HttpURLConnection) url.openConnection();
 			} catch (IOException e) {
 				LOGGER.error("Unable to connect to host.", e);
-				System.out.println("ERROR: Unable to connect to host.");
-				System.exit(1);
+				throw e;
 			}
 
 			if(cookieValue != null) {
 				if(cookieValue.length() != 0)
 					connection.setRequestProperty("Cookie", cookieValue);
 			}
-			
+
 			connection.setDoOutput(true);
 			connection.setDoInput(true);
 			connection.setInstanceFollowRedirects(false);
@@ -224,8 +227,7 @@ public class HTTPCallActions implements IHTTPCallActions {
 				connection.setRequestMethod("POST");
 			} catch (ProtocolException e) {
 				LOGGER.error("Protocol Exception", e);
-				System.out.println("ERROR: Protocol excetion.");
-				System.exit(1);
+				throw e;
 			}
 			//connection.setRequestProperty("Content-Type", "application/json"); 
 			connection.setRequestProperty("charset", "utf-8");
@@ -239,8 +241,7 @@ public class HTTPCallActions implements IHTTPCallActions {
 				wr.close();
 			} catch (IOException e) {
 				LOGGER.error("Unable to write request parameter.", e);
-				System.out.println("ERROR: Unable to write request parameters.");
-				System.exit(1);
+				throw e;
 			}
 
 			return HTTPFactory.getHTTPResponse(connection);
@@ -252,42 +253,43 @@ public class HTTPCallActions implements IHTTPCallActions {
 		 * @param cookieValue Cookie data in a string format. This format is
 		 * similar to that of request parameters.
 		 * @return HTTP response object.
+		 * @throws IOException  When the URL is malformed or the host cannot be
+		 * resolved or connected to.
+		 * @throws GeneralSecurityException  When there is an error in ignoring
+		 * certificate errors.
 		 */
-		private static IHTTPResponse makePutCall(String putUrl, String parameters, String cookieValue) {
+		private static IHTTPResponse makePutCall(String putUrl, String parameters, String cookieValue) throws IOException, GeneralSecurityException {
 			handleCertificateErrors();
-			
+
 			LOGGER.info("PUT call: " + putUrl + "\nParams: " + parameters);
 			URL url = null;
 			try {
 				url = new URL(putUrl);
 			} catch (MalformedURLException e) {
 				LOGGER.error("Improper URL", e);
-				System.out.println("ERROR: Improper URL: " + putUrl);
-				System.exit(1);
+				throw e;
 			}
-			
+
 			HttpURLConnection connection = null;
 			try {
 				connection = (HttpURLConnection) url.openConnection();
 			} catch (IOException e) {
 				LOGGER.error("Unable to connect to host.", e);
-				System.out.println("ERROR: Unable to connect to host.");
-				System.exit(1);
+				throw e;
 			}
 
 			if(cookieValue != null) {
 				if(cookieValue.length() != 0)
 					connection.setRequestProperty("Cookie", cookieValue);
 			}
-			
+
 			connection.setDoOutput(true);
 			connection.setRequestProperty("Content-Type", "application/json" );
 			try {
 				connection.setRequestMethod("PUT");
 			} catch (ProtocolException e) {
 				LOGGER.error("Protocol Exception", e);
-				System.out.println("ERROR: Protocol excetion.");
-				System.exit(1);
+				throw e;
 			}
 
 			OutputStreamWriter out;
@@ -297,10 +299,9 @@ public class HTTPCallActions implements IHTTPCallActions {
 				out.close();
 			} catch (IOException e) {
 				LOGGER.error("Unable to write request parameter.", e);
-				System.out.println("ERROR: Unable to write request parameters.");
-				System.exit(1);
+				throw e;
 			}
-			
+
 			return HTTPFactory.getHTTPResponse(connection);
 		}
 
@@ -309,59 +310,61 @@ public class HTTPCallActions implements IHTTPCallActions {
 		 * @param cookieValue Cookie data in a string format. This format is
 		 * similar to that of request parameters.
 		 * @return String HTTP response.
+		 * @throws IOException  When the URL is malformed or the host cannot be
+		 * resolved or connected to.
+		 * @throws GeneralSecurityException  When there is an error in ignoring
+		 * certificate errors.
 		 */
-		private static IHTTPResponse makeDeleteCall(String deleteUrl, String cookieValue) {
+		private static IHTTPResponse makeDeleteCall(String deleteUrl, String cookieValue) throws IOException, GeneralSecurityException {
 			handleCertificateErrors();
-			
+
 			LOGGER.info("DELETE call: " + deleteUrl);
 			URL url = null;
 			try {
 				url = new URL(deleteUrl);
 			} catch (MalformedURLException e) {
 				LOGGER.error("Improper URL", e);
-				System.out.println("ERROR: Improper URL: " + deleteUrl);
-				System.exit(1);
+				throw e;
 			}
-			
+
 			HttpURLConnection connection = null;
 			try {
 				connection = (HttpURLConnection) url.openConnection();
 			} catch (IOException e) {
 				LOGGER.error("Unable to connect to host.", e);
-				System.out.println("ERROR: Unable to connect to host.");
-				System.exit(1);
+				throw e;
 			}
 
 			if(cookieValue != null) {
 				if(cookieValue.length() != 0)
 					connection.setRequestProperty("Cookie", cookieValue);
 			}
-			
+
 			connection.setDoOutput(true);
 			connection.setRequestProperty("Content-Type", "application/json");
-			
+
 			try {
 				connection.setRequestMethod("DELETE");
 			} catch (ProtocolException e) {
 				LOGGER.error("Protocol Exception", e);
-				System.out.println("ERROR: Protocol excetion.");
-				System.exit(1);
+				throw e;
 			}
 			try {
 				connection.connect();
 			} catch (IOException e) {
 				LOGGER.error("Unable to connect to host.", e);
-				System.out.println("ERROR: Unable to connect to host.");
-				System.exit(1);
+				throw e;
 			}
 
 			return HTTPFactory.getHTTPResponse(connection);
 		}
-		
+
 		/**
 		 * This method is used to handle certificate errors.
+		 * @throws GeneralSecurityException When there is an error in ignoring
+		 * certificate errors.
 		 */
-		private static void handleCertificateErrors() {
+		private static void handleCertificateErrors() throws GeneralSecurityException {
 			TrustManager[] trustAllCerts = new TrustManager[] {new X509TrustManager() {	
 				public java.security.cert.X509Certificate[] getAcceptedIssuers() {return null;}
 				public void checkClientTrusted(X509Certificate[] certs, String authType) {}
@@ -373,11 +376,10 @@ public class HTTPCallActions implements IHTTPCallActions {
 				sc = SSLContext.getInstance("SSL");
 				sc.init(null, trustAllCerts, new java.security.SecureRandom());
 			} catch (NoSuchAlgorithmException | KeyManagementException e) {
-				System.out.println("ERROR: Unable to handle certifcate errors.");
-				LOGGER.error("Unable to handle certifcate errors.", e);
-				System.exit(1);
+				LOGGER.error("Unable to handle certificate errors.", e);
+				throw e;
 			}
-			
+
 			HttpsURLConnection.setDefaultSSLSocketFactory(sc.getSocketFactory());
 			HostnameVerifier allHostsValid = new HostnameVerifier() {
 				public boolean verify(String hostname, SSLSession session) {
@@ -386,7 +388,7 @@ public class HTTPCallActions implements IHTTPCallActions {
 			};
 			HttpsURLConnection.setDefaultHostnameVerifier(allHostsValid);
 		}
-		
+
 	}
 
 }
