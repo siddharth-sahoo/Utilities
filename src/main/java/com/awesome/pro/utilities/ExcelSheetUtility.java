@@ -16,12 +16,12 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook;
  * Wrapper on Apache excel reader library.
  * @author sankeerth.reddy
  */
-public class ExcelSheetUitility implements IExcelSheetDriver {
+public class ExcelSheetUtility implements IExcelSheetDriver {
 	
 	/**
 	 * Instance of default logger.
 	 */
-	private Logger LOGGER = Logger.getLogger(ExcelSheetUitility.class);
+	private Logger LOGGER = Logger.getLogger(ExcelSheetUtility.class);
 	
 	/**
 	 * Reference to the actively selected work sheet.
@@ -38,27 +38,48 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 	 */
 	private String fileName;
 
-	public ExcelSheetUitility(String file) {
-		this.fileName = file;
+	/**
+	 * Wrapper on Apache excel reader library.
+	 * @param file Name of the file to read.
+	 * @throws IOException When the specified file cannot be found or read.
+	 */
+	public ExcelSheetUtility(String file) throws IOException {
+		fileName = file;
 		try {
-			InputStream ExcelFileToRead = new FileInputStream(file);
-			this.workbook = new XSSFWorkbook(ExcelFileToRead);
-			ExcelFileToRead.close();
+			InputStream is = new FileInputStream(fileName);
+			this.workbook = new XSSFWorkbook(is);
+			
+			is.close();
 		} catch (IOException e) {
-			LOGGER.error("Error in reading file: " + file, e);
+			InputStream is = this.getClass().getClassLoader()
+					.getResourceAsStream(fileName);
+
+			if (is == null) {
+				LOGGER.error("Error in reading file: " + file, e);
+				throw e;
+			}
+
+			this.workbook = new XSSFWorkbook(is);
+			is.close();
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#setSheet(java.lang.String)
+	 */
 	@Override
 	public void setSheet(String sheetName) {
 		this.sheet = this.workbook.getSheet(sheetName);
 		try {
 			this.sheet.getRow(0);
 		} catch (NullPointerException e) {
-			LOGGER.error("ERROR: Specified sheet not found: " + sheetName, e);
+			LOGGER.warn("Specified sheet not found: " + sheetName, e);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#getStringRow(int)
+	 */
 	@Override
 	public List<String> getStringRow(int row) {
 		List<String> rowList = new ArrayList<String>();
@@ -79,6 +100,9 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 		return rowList;
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#getIntegerRow(int)
+	 */
 	@Override
 	public List<Integer> getIntegerRow(int row) {
 		List<Integer> rowList = new ArrayList<>();
@@ -100,6 +124,9 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 		return rowList;
 	}
 
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#getStringCell(int, int)
+	 */
 	@Override
 	public String getStringCell(int row, int column) {
 		if(this.sheet == null)
@@ -125,6 +152,9 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 		}
 	}
 	
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#getIntegerCell(int, int)
+	 */
 	@Override
 	public int getIntegerCell(int row, int column) {
 		if(this.sheet == null)
@@ -148,6 +178,9 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#setCell(int, int, java.lang.String)
+	 */
 	@Override
 	public void setCell(int row, int column, String cellValue){
 		if(this.sheet == null)
@@ -176,6 +209,9 @@ public class ExcelSheetUitility implements IExcelSheetDriver {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see com.awesome.pro.utilities.IExcelSheetDriver#setAllCells(java.lang.String[][])
+	 */
 	@Override
 	public void setAllCells(String[][] inputArray){
 		if (LOGGER.isDebugEnabled()) {

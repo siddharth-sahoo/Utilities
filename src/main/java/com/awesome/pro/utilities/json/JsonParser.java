@@ -193,6 +193,34 @@ public class JsonParser {
 	}
 
 	/**
+	 * Serializes an object into a JSON.
+	 * @param obj Object to be serialized.
+	 * @param typeOfT Type of the object.
+	 * @return JSON as a string.
+	 */
+	public String toJson(Object obj, Type typeOfT) {
+		return this.gson.toJson(obj, typeOfT);
+	}
+
+	/**
+	 * Serializes an object into a JSON.
+	 * @param obj Object to be serialized.
+	 * @return JSON as a string.
+	 */
+	public String toJson(Object obj) {
+		return this.gson.toJson(obj);
+	}
+
+	/**
+	 * Serializes a JSON element.
+	 * @param element JSON element to be serialized.
+	 * @return JSON as a string.
+	 */
+	public String toJson(JsonElement element) {
+		return this.gson.toJson(element);
+	}
+
+	/**
 	 * Holder class for GSON and adapter instances which will contain
 	 * it in a thread safe manner.
 	 * @author siddharth.s
