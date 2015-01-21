@@ -226,8 +226,9 @@ public class HTTPResponse implements IHTTPResponse, IHTTPPerformance {
 	 * @param is Input stream.
 	 * @param bufferSize Buffer size to be used while reading.
 	 * @return String read from input stream.
+	 * @throws IOException When there is an error in reading the stream.
 	 */
-	private static String convertStream(InputStream is, int bufferSize)	{
+	private static String convertStream(InputStream is, int bufferSize) throws IOException	{
 		final char[] buffer = new char[bufferSize];
 		final StringBuilder out = new StringBuilder();
 		try {
@@ -246,11 +247,11 @@ public class HTTPResponse implements IHTTPResponse, IHTTPPerformance {
 		}
 		catch (UnsupportedEncodingException e) {
 			LOGGER.error("Unsupported encoding.", e);
-			throw new Error("Unsupported encoding.");
+			throw e;
 		}
 		catch (IOException e) {
 			LOGGER.error("Unable to read input stream.", e);
-			throw new Error("ERROR: Unable to read input stream.");
+			throw e;
 		}
 		return out.toString();
 	}

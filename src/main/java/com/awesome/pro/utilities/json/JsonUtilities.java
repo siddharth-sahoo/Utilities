@@ -47,10 +47,13 @@ public class JsonUtilities {
 		for(int i = 0; i < keys.length - 1; i ++) {
 			if(eventJson.has(keys[i])) {
 				JsonElement element = eventJson.get(keys[i]);
-				if (element.isJsonObject())
+				if (element.isJsonObject()) {
 					eventJson = element.getAsJsonObject();
-				else
-					throw new Error("Logic error.");
+				}
+				else {
+					LOGGER.warn("Expected a JSON object when parsing recursively.");
+					return null;
+				}
 			}
 			else {
 				LOGGER.warn("Variable not found in event JSON: " + expression + " - " + eventJson);

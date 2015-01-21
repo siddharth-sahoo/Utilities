@@ -2,11 +2,13 @@ package com.awesome.pro.utilities.db.mongo;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
 import com.awesome.pro.utilities.PropertyFileUtility;
 import com.mongodb.DB;
+import com.mongodb.DBCollection;
 import com.mongodb.DBCursor;
 import com.mongodb.DBObject;
 import com.mongodb.MongoClient;
@@ -67,9 +69,30 @@ public final class MongoConnection {
 	 */
 	public static final DBCursor getDocuments(final String database,
 			final String collection, final DBObject query) {
-		return getDatabase(database)
-				.getCollection(collection)
-				.find(query);
+		if (database == null || database.length() == 0) {
+			LOGGER.warn("Illegal database name.");
+			return null;
+		}
+
+		if (collection == null || collection.length() == 0) {
+			LOGGER.warn("Illegal collection name.");
+			return null;
+		}
+
+		final DB db = getDatabase(database);
+		if (db == null) {
+			LOGGER.warn("Unable to find database: " + database);
+			return null;
+		}
+
+		final DBCollection dbCollection = db.getCollection(collection);
+		if (dbCollection == null) {
+			LOGGER.warn("Unable to find collection: " + collection
+					+ " in database: " + database);
+			return null;
+		}
+
+		return dbCollection.find(query);
 	}
 
 	/**
@@ -79,9 +102,30 @@ public final class MongoConnection {
 	 */
 	public static final DBCursor getDocuments(final String database,
 			final String collection) {
-		return getDatabase(database)
-				.getCollection(collection)
-				.find();
+		if (database == null || database.length() == 0) {
+			LOGGER.warn("Illegal database name.");
+			return null;
+		}
+
+		if (collection == null || collection.length() == 0) {
+			LOGGER.warn("Illegal collection name.");
+			return null;
+		}
+
+		final DB db = getDatabase(database);
+		if (db == null) {
+			LOGGER.warn("Unable to find database: " + database);
+			return null;
+		}
+
+		final DBCollection dbCollection = db.getCollection(collection);
+		if (dbCollection == null) {
+			LOGGER.warn("Unable to find collection: " + collection
+					+ " in database: " + database);
+			return null;
+		}
+		
+		return dbCollection.find();
 	}
 
 	/**
@@ -94,18 +138,108 @@ public final class MongoConnection {
 	public static final DBCursor getDocuments(final String database,
 			final String collection, final DBObject query,
 			final DBObject filterKeys) {
-		return getDatabase(database)
-				.getCollection(collection)
-				.find(query, filterKeys);
+		if (database == null || database.length() == 0) {
+			LOGGER.warn("Illegal database name.");
+			return null;
+		}
+
+		if (collection == null || collection.length() == 0) {
+			LOGGER.warn("Illegal collection name.");
+			return null;
+		}
+
+		final DB db = getDatabase(database);
+		if (db == null) {
+			LOGGER.warn("Unable to find database: " + database);
+			return null;
+		}
+
+		final DBCollection dbCollection = db.getCollection(collection);
+		if (dbCollection == null) {
+			LOGGER.warn("Unable to find collection: " + collection
+					+ " in database: " + database);
+			return null;
+		}
+
+		return dbCollection.find(query, filterKeys);
 	}
 
 	/**
 	 * @param database Name of the database.
 	 * @return Database reference object.
 	 */
-	private static final DB getDatabase(String database) {
+	private static final DB getDatabase(final String database) {
+		if (database == null || database.length() == 0) {
+			return null;
+		}
 		LOGGER.info("Connecting to database: " + database);
 		return MONGO.getDB(database);
+	}
+
+	/**
+	 * @param database Name of the database.
+	 * @param collection Name of the collection.
+	 * @param data Data to be inserted.
+	 */
+	public static final void insertDocument(final String database,
+			final String collection, final List<DBObject> data) {
+		if (database == null || database.length() == 0) {
+			LOGGER.warn("Illegal database name.");
+			return;
+		}
+
+		if (collection == null || collection.length() == 0) {
+			LOGGER.warn("Illegal collection name.");
+			return;
+		}
+
+		final DB db = getDatabase(database);
+		if (db == null) {
+			LOGGER.warn("Unable to find database: " + database);
+			return;
+		}
+
+		final DBCollection dbCollection = db.getCollection(collection);
+		if (dbCollection == null) {
+			LOGGER.warn("Unable to find collection: " + collection
+					+ " in database: " + database);
+			return;
+		}
+
+		dbCollection.insert(data);
+	}
+
+	/**
+	 * @param database Name of the database.
+	 * @param collection Name of the collection.
+	 * @param data Data to be inserted.
+	 */
+	public static final void insertDocument(final String database,
+			final String collection, final DBObject... data) {
+		if (database == null || database.length() == 0) {
+			LOGGER.warn("Illegal database name.");
+			return;
+		}
+
+		if (collection == null || collection.length() == 0) {
+			LOGGER.warn("Illegal collection name.");
+			return;
+		}
+
+		final DB db = getDatabase(database);
+		if (db == null) {
+			LOGGER.warn("Unable to find database: " + database);
+			return;
+		}
+
+		final DBCollection dbCollection = db.getCollection(collection);
+		if (dbCollection == null) {
+			LOGGER.warn("Unable to find collection: " + collection
+					+ " in database: " + database);
+			return;
+		}
+
+		dbCollection.insert(data);
 	}
 
 	// Private constructor.
